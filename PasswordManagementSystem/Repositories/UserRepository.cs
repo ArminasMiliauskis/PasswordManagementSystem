@@ -3,39 +3,50 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using PasswordManagementSystem.Classes;
 namespace PasswordManagementSystem.Repositories
 {
     class UserRepository
     {
         private const string ConnectionString = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Arme\source\repos\PasswordManagementSystem\PasswordManagementSystem\Database.mdf;Integrated Security = True; Connect Timeout = 30";
-        SqlConnection con = new SqlConnection(ConnectionString);
+        SqlConnection con = new SqlConnection(ConnectionString);  //C:\Users\Arme\source\repos\PasswordManagementSystem\PasswordManagementSystem\Database.mdf
+
         
-        public User LoginUser(string username, string password)
+        public (bool, User) UserLogin(string username, string password)
         {
             User user = new User();
             try
             {
                 con = new SqlConnection(ConnectionString);
-                SqlCommand cmd = new SqlCommand("Select Username,Password FROM Users where Username=@Username AND Password=@Password", con);
-                //parametrised Sql Command, have to provide values that we wrote
+                con.Open();
+                SqlCommand cmd = new SqlCommand("Select * from Users where Username=@Username AND Password=@Password", con);
                 cmd.Parameters.AddWithValue("@Username", username);
                 cmd.Parameters.AddWithValue("@Password", password);
-
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                while(dataReader.Read() == true)
                 {
-                    string Name = reader["Username"].ToString();
-                    string FileName = reader["FileName"].ToString();
-
-                    user.Name = Name;
-                    user.FileName = FileName;
+                    user.Name = dataReader["Username"].ToString();
+                    user.FileName = dataReader["FileName"].ToString();
+                    return (true,user);
                 }
+                dataReader.Close();
                 con.Close();
-                return user;
-            }catch (Exception ex) { Console.WriteLine(ex); return null; }
+                
+            }catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);              
+            }
+            return (false, null);
+        }
+        public void CreateNewFile(string filename)
+        {
+            string path = @"c:\ProgramData\" + filename;
+            if (!System.IO.File.Exists(path))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = System.IO.File.CreateText(path));               
+            }
         }
     }
 }

@@ -41,9 +41,10 @@ namespace PasswordManagementSystem
         public void InstertIntoDB(string username, string password)
         {
             con.Open();
-            SqlCommand cmd = new SqlCommand("Insert into Users (Username,Password) VALUES(@Username,@Password)", con);
+            SqlCommand cmd = new SqlCommand("Insert into Users (Username,Password,FileName) VALUES(@Username,@Password,@FileName)", con);
             cmd.Parameters.AddWithValue("@Username", username);
             cmd.Parameters.AddWithValue("@Password", password);
+            cmd.Parameters.AddWithValue("@FileName", username + ".txt");
             cmd.ExecuteNonQuery();
             con.Close();
         }

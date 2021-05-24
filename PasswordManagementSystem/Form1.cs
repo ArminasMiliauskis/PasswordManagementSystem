@@ -19,6 +19,7 @@ namespace PasswordManagementSystem
         {
             InitializeComponent();
             userRepository = new UserRepository();
+            tb_Password.Text = "VkiEUP5!AM";
         }
 
         private const string ConnectionString = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Arme\source\repos\PasswordManagementSystem\PasswordManagementSystem\Database.mdf;Integrated Security = True; Connect Timeout = 30";
@@ -26,17 +27,20 @@ namespace PasswordManagementSystem
 
         private void btn_Login_Click(object sender, EventArgs e)
         {
+            User user = new User();
             if (tb_Username.Text != null && tb_Username.Text != "" && tb_Password.Text != null && tb_Password.Text != "")
             {
-                User user = userRepository.LoginUser(tb_Username.Text, tb_Password.Text);
 
-                if (user.Name != null && user.Name != "")
+
+                if (userRepository.UserLogin(tb_Username.Text, tb_Password.Text).Item1 == true)
                 {
-                    MainForm main = new(user);
+                    user = userRepository.UserLogin(tb_Username.Text, tb_Password.Text).Item2;
+                    MainForm main = new MainForm(user);
                     this.Hide();
                     main.ShowDialog();
                     this.Close();
                 }
+                
             }
             else
             {
