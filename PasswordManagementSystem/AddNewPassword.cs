@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 using PasswordManagementSystem.Classes;
 namespace PasswordManagementSystem
@@ -30,6 +31,7 @@ namespace PasswordManagementSystem
             List<string> data = new List<string>();
             data.Add(tb_Name.Text + "," + tb_Url.Text + "," + des.EncryptData(tb_Password.Text, Convert.ToString(32165468), true));
             FileManager.WriteFile(user.FileName, data);
+            //File.AppendAllText(user.FileName, data);
             this.Close();
         }
     }

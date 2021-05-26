@@ -94,7 +94,7 @@ namespace PasswordManagementSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(380, 277);
+            this.ClientSize = new System.Drawing.Size(380, 172);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tb_Password);
             this.Controls.Add(this.btn_Cancel);

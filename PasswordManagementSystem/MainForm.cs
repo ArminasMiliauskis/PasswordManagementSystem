@@ -25,6 +25,12 @@ namespace PasswordManagementSystem
             this.user = user;
             userRepository = new UserRepository();
             user.FileName = @"C:\ProgramData\" + user.FileName;
+            if (!File.Exists(user.FileName))
+            {
+                FileStream fs = File.Create(user.FileName);
+                fs.Close();
+            }
+            
             string encryptedFile = user.FileName + ".aes";
             if (user.FileName != null) 
             {
@@ -39,7 +45,9 @@ namespace PasswordManagementSystem
                     FileManager.Delete(encryptedFile);
                 }
 
-            }           
+            }
+            AddToTable();
+            
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -76,6 +84,57 @@ namespace PasswordManagementSystem
         {
             AddNewPassword add = new AddNewPassword(user);
             add.ShowDialog();
+        }
+        void AddToTable()
+        {
+            
+            DataTable dta = new DataTable();
+            //dta.Rows.Clear();
+            dta.Columns.Add("Pavadinimas", typeof(string));
+            dta.Columns.Add("URL/Aprašymas", typeof(string));
+            dta.Columns.Add("Slaptažodis", typeof(string));
+            
+            dataGridView1.DataSource = dta;
+
+            string[] lines = File.ReadAllLines(user.FileName);
+            string[] values;
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                values = lines[i].ToString().Split(",");
+                string[] row = new string[values.Length];
+
+                for(int j = 0; j < values.Length; j++)
+                {
+                    row[j] = values[j].Trim();
+                }
+                dta.Rows.Add(row);
+            }
+
+        }
+        
+        private void btn_Refresh_Click(object sender, EventArgs e)
+        {
+            AddToTable();
+           
+        }
+
+        private void btn_Search_Click(object sender, EventArgs e)
+        {
+            SearchForm searchForm = new SearchForm(user);
+            searchForm.ShowDialog();
+        }
+
+        private void btn_Update_Click(object sender, EventArgs e)
+        {
+            UpdateFrom updateFrom = new UpdateFrom(user);
+            updateFrom.ShowDialog();
+        }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            DeleteForm deleteForm = new DeleteForm(user);
+            deleteForm.ShowDialog();
         }
     }
 }

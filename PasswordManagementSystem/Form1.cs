@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace PasswordManagementSystem
     public partial class Form1 : Form
     {
         UserRepository userRepository;
+        Hash hash = new Hash();
         public Form1()
         {
             InitializeComponent();
@@ -32,9 +34,10 @@ namespace PasswordManagementSystem
             {
 
 
-                if (userRepository.UserLogin(tb_Username.Text, tb_Password.Text).Item1 == true)
+                if (userRepository.UserLogin(tb_Username.Text, hash.passHash(tb_Password.Text)).Item1 == true)
                 {
-                    user = userRepository.UserLogin(tb_Username.Text, tb_Password.Text).Item2;
+                    user = userRepository.UserLogin(tb_Username.Text, hash.passHash(tb_Password.Text)).Item2;
+                   
                     MainForm main = new MainForm(user);
                     this.Hide();
                     main.ShowDialog();

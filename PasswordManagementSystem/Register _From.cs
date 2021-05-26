@@ -9,13 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-
+using PasswordManagementSystem.Classes;
 namespace PasswordManagementSystem
 {
     public partial class Register__From : Form
     {
         private const string ConnectionString = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Arme\source\repos\PasswordManagementSystem\PasswordManagementSystem\Database.mdf;Integrated Security = True; Connect Timeout = 30";
         SqlConnection con = new SqlConnection(ConnectionString);
+        Hash hash = new Hash();
         public Register__From()
         {
             InitializeComponent();
@@ -29,8 +30,9 @@ namespace PasswordManagementSystem
 
         private void btn_Create_Click(object sender, EventArgs e)
         {
-            InstertIntoDB(tb_Username.Text, tb_Password.Text);
+            InstertIntoDB(tb_Username.Text, hash.passHash(tb_Password.Text));
             MessageBox.Show("Succes!");
+            this.Close();
         }
 
         private void btn_Cancel_Click(object sender, EventArgs e)

@@ -15,13 +15,16 @@ namespace PasswordManagementSystem.Classes
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(filePath))
+                using (StreamWriter sw = new StreamWriter(filePath,true))
                 {
+                    //sw.WriteLine("");
+                    
                     foreach (var d in data)
-                    {
-                        sw.WriteLine(d);
+                    {                      
+                        sw.WriteLine(d,Environment.NewLine);
+                        //sw.WriteLine(d);
+                        //sw.Write(d);
                     }
-
                     sw.Close();
                 }
             }
